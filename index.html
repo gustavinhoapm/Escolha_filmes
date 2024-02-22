@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escolha de Filmes</title>
+  <style>
+
+@import url(https://db.onlinewebfonts.com/c/97c4b25dc74e0ab045154e75a8fdd69d?family=Game+of+Thrones);
+@font-face {
+    font-family: "Game of Thrones";
+    src: url("https://db.onlinewebfonts.com/t/97c4b25dc74e0ab045154e75a8fdd69d.eot");
+    src: url("https://db.onlinewebfonts.com/t/97c4b25dc74e0ab045154e75a8fdd69d.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/97c4b25dc74e0ab045154e75a8fdd69d.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/97c4b25dc74e0ab045154e75a8fdd69d.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/97c4b25dc74e0ab045154e75a8fdd69d.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/97c4b25dc74e0ab045154e75a8fdd69d.svg#Game of Thrones")format("svg");
+}
+
+    body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("assets/img/wallpaper.jpg");
+    font-family: "Game of Thrones";
+      text-align: center;
+      margin: 20px;
+      background-size: cover;
+    background-attachment: fixed;
+    background-position: top center;
+    background-repeat: no-repeat;
+    color: white;
+    }
+
+    #movieInput, #movieList, #randomMovie {
+      margin-bottom: 10px;
+    }
+
+    button {
+        border: 2px solid black;
+        border-radius: 20px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: rgb(210, 212, 212);
+
+    }
+
+    button:hover {
+        transform: scale(1.1);
+        transition: all 0.3s;
+        background-color: brown;
+        color: white;
+    }
+
+    .quadro {
+    background-color: rgba(255, 255, 255, 0.158);
+    margin: 200px auto; /* Ajuste conforme necessário */
+    padding: 20px;
+    width: 70%; /* Ajuste a largura conforme necessário */
+    border-radius: 20px;
+    border: 2px solid rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#movieList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+  </style>
+</head>
+<body>
+    <div class="quadro">
+  <h1>Escolha de Filmes</h1>
+
+  <label for="movieInput">Digite um filme:</label>
+  <input type="text" id="movieInput">
+  <button onclick="fetchMovies()">Aparecer Filmes</button>
+
+  <button onclick="addMovie()">Salvar Filme</button>
+
+  <h2>Filmes Salvos:</h2>
+  <ul id="movieList"></ul><br>
+
+  <button onclick="pickRandomMovie()">Escolher Filme Aleatório</button>
+  <p id="randomMovieResult"></p>
+</div>
+
+  <script>
+    // Array para armazenar os filmes
+    const movies = [];
+
+    // Função para adicionar um filme à lista
+    function addMovie() {
+      const movieInput = document.getElementById('movieInput');
+      const movieList = document.getElementById('movieList');
+
+      if (movieInput.value.trim() !== '') {
+        movies.push(movieInput.value.trim());
+        movieInput.value = '';
+
+        // Atualiza a lista de filmes
+        updateMovieList();
+      }
+    }
+
+    // Função para atualizar a lista de filmes exibida na página
+    function updateMovieList() {
+      const movieList = document.getElementById('movieList');
+      movieList.innerHTML = '';
+
+      movies.forEach(movie => {
+        const li = document.createElement('li');
+        li.textContent = movie;
+        movieList.appendChild(li);
+      });
+    }
+
+    // Função para escolher um filme aleatório
+    function pickRandomMovie() {
+      const randomMovieResult = document.getElementById('randomMovieResult');
+
+      if (movies.length > 0) {
+        const randomIndex = Math.floor(Math.random() * movies.length);
+        const randomMovie = movies[randomIndex];
+        randomMovieResult.textContent = `Filme escolhido: ${randomMovie}`;
+      } else {
+        randomMovieResult.textContent = 'Adicione um filmes antes de escolher!';
+      }
+    }
+
+ async function fetchMovies () {
+  const url = 'https://gowatch.p.rapidapi.com/lookup/title/tmdb_id?id=496243&type=movie&country=us';
+const options = {
+	method: 'POST',
+	headers: {
+		'content-type': 'application/x-www-form-urlencoded',
+		'X-RapidAPI-Key': 'bc1f166a2bmshf7c36433f9a87cfp1aba95jsnbcd285ba4ea6',
+		'X-RapidAPI-Host': 'gowatch.p.rapidapi.com'
+	},
+	body: new URLSearchParams({
+		id: '496243',
+		type: 'movie',
+		country: 'us'
+	})
+};
+
+try {
+	const response = await fetch(url, options);
+	const result = await response.text();
+	console.log(result);
+} catch (error) {
+	console.error(error);
+}
+}
+
+
+  </script>
+</body>
+</html>
